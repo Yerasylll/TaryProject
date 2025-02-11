@@ -1,27 +1,32 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
 assistants = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text="/start")],
-    [KeyboardButton(text="/help")],
-    [KeyboardButton(text="/basket")]],
+    [KeyboardButton(text="📜 View Menu")],
+    [KeyboardButton(text="🛒 Place Order")],
+    [KeyboardButton(text="📞 Contact Support")]],
     resize_keyboard=True,
 )
 
-main = ReplyKeyboardMarkup(keyboard=[
-        [KeyboardButton(text="")],
-        [KeyboardButton(text="")],
-        [KeyboardButton(text=""),
-         KeyboardButton(text="")]],
-    resize_keyboard=True,
-    input_field_placeholder="Choose a point menu...")
+class Menu:
+    def __init__(self, file_path):
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        self.items = [MenuItem(item["name"], item["price_kzt"]) for category in data["menu"] for item in category["items"]]
 
-catalog = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="T-shirt", callback_data="t-shirt")],
-        [InlineKeyboardButton(text="Sneakers", callback_data="sneakers")],
-        [InlineKeyboardButton(text="Cap", callback_data="cap")],
-])
+    def get_menu_text(self):
+        return "\n".join(str(item) for item in self.items)
 
-get_number = ReplyKeyboardMarkup(keyboard=[
-        [KeyboardButton(text="Number", callback_data="number")]],
-    resize_keyboard=True
-)
+    def get_menu_keyboard(self):
+        keyboard = InlineKeyboardMarkup()
+        for item in self.items:
+            keyboard.add(InlineKeyboardButton(f"{item.name} - {item.price} KZT", callback_data=f"order_{item.name}"))
+        return keyboard
+
+tary_menu = Menu("tary_bot/tary_menu.json")
+
+for category in tary_menu['menu']['items']:
+    menu_keyboard = InlineKeyboardMarkup(keyboard=[
+        [InlineKeyboardButton(f"{item['name']} - {item['price_kzt']} KZT", callback_data=f"order_{item['name']}")]
+    ])
+
+
