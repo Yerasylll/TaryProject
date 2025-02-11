@@ -1,10 +1,11 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
 assistants = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text="start")],
-    [KeyboardButton(text="help")],
-    [KeyboardButton(text="basket")]
-])
+    [KeyboardButton(text="/start")],
+    [KeyboardButton(text="/help")],
+    [KeyboardButton(text="/basket")]],
+    resize_keyboard=True,
+)
 
 main = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="")],
