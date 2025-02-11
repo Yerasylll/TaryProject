@@ -4,7 +4,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
-import first_bot.app.keyboards as kb
+import tary_bot.app.keyboards as kb
 
 router = Router()
 
@@ -13,7 +13,7 @@ class Register(StatesGroup):
     age = State()
     number = State()
 
-@router.message(CommandStart())
+@router.message(CommandStart(""))
 async def cmd_start(message: Message):
     await message.answer("Hello!", reply_markup=kb.main)
     await message.reply("How are you!")
@@ -54,3 +54,4 @@ async def register_number(message: Message, state: FSMContext):
     data = await state.get_data()
     await message.answer(f"Your name: {data['name']}\nYour age: {data['age']}\nYour number: {data['number']}")
     await state.clear()
+

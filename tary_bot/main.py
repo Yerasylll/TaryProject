@@ -1,0 +1,44 @@
+import json
+import asyncio
+from aiogram import Bot, Dispatcher
+
+from tary_bot.app.handlers import router
+
+async def main():
+    bot = Bot(token="7718789350:AAHJCVL48YSu-lt-0CzpoixddpO-vnWwzBc")
+    dp = Dispatcher()
+    dp.include_router(router)
+    await dp.start_polling(bot)
+
+class MenuItem:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def __str__(self):
+        return f"{self.name} - {self.price} KZT"
+
+class Menu:
+    def __init__(self, file_path):
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        self.items = [MenuItem(item["name"], item["price_kzt"]) for category in data["menu"] for item in category["items"]]
+
+    def get_menu_text(self):
+        return "\n".join(str(item) for item in self.items)
+
+    def get_menu_keyboard(self):
+        keyboard = InlineKeyboardMarkup()
+        for item in self.items:
+            keyboard.add(InlineKeyboardButton(f"{item.name} - {item.price} KZT", callback_data=f"order_{item.name}"))
+        return keyboard
+
+# Initialize menu
+tary_menu = Menu("tary_menu.json")
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Bot is interrupted")
