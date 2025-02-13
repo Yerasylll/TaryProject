@@ -19,6 +19,7 @@ class Menu:
         if not os.path.exists(full_path):
             raise FileNotFoundError(f"Menu file not found: {full_path}")
 
+
         with open(full_path, 'r') as f:
             data = json.load(f)
 
